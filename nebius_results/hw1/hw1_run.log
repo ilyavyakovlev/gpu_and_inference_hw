@@ -1,7 +1,3 @@
-/tmp/tmpao0z0syw/main.c:5:10: fatal error: Python.h: No such file or directory
-    5 | #include <Python.h>
-      |          ^~~~~~~~~~
-compilation terminated.
 ======================================================================
 HW1: GPU Roofline Model — NVIDIA H100 80GB HBM3
 ======================================================================
@@ -14,185 +10,27 @@ Theoretical specs (FP32):
 Running benchmarks (first run compiles kernels via torch.compile)...
   lowest-AI:  0.180 ms | BW: 2.98 TB/s
     1 ops (   eager): 0.442 ms | AI: 0.0833 FLOP/B | 0.30 TFLOP/s
-Traceback (most recent call last):
-  File "/home/karke/gpu_and_inference_hw/hw1/hw1_task.py", line 48, in <module>
-    main()
-  File "/home/karke/gpu_and_inference_hw/hw1/hw1_task.py", line 39, in main
-    run_hw1(
-  File "/home/karke/gpu_and_inference_hw/hw1/hw1_task.py", line 19, in run_hw1
-    results = measure_roofline_points(
-              ^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/karke/gpu_and_inference_hw/hw1/hw1_runtime.py", line 101, in measure_roofline_points
-    ms = benchmark_fn(compute_fn, x)
-         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/karke/gpu_and_inference_hw/hw1/hw1_task_impl.py", line 63, in benchmark_fn
-    fn(*args)
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/torch/_dynamo/eval_frame.py", line 574, in _fn
-    return fn(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/torch/_dynamo/convert_frame.py", line 1380, in __call__
-    return self._torchdynamo_orig_callable(
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/torch/_dynamo/convert_frame.py", line 1164, in __call__
-    result = self._inner_convert(
-             ^^^^^^^^^^^^^^^^^^^^
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/torch/_dynamo/convert_frame.py", line 547, in __call__
-    return _compile(
-           ^^^^^^^^^
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/torch/_dynamo/convert_frame.py", line 986, in _compile
-    guarded_code = compile_inner(code, one_graph, hooks, transform)
-                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/torch/_dynamo/convert_frame.py", line 715, in compile_inner
-    return _compile_inner(code, one_graph, hooks, transform)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/torch/_utils_internal.py", line 95, in wrapper_function
-    return function(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/torch/_dynamo/convert_frame.py", line 750, in _compile_inner
-    out_code = transform_code_object(code, transform)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/torch/_dynamo/bytecode_transformation.py", line 1361, in transform_code_object
-    transformations(instructions, code_options)
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/torch/_dynamo/convert_frame.py", line 231, in _fn
-    return fn(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/torch/_dynamo/convert_frame.py", line 662, in transform
-    tracer.run()
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/torch/_dynamo/symbolic_convert.py", line 2868, in run
-    super().run()
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/torch/_dynamo/symbolic_convert.py", line 1052, in run
-    while self.step():
-          ^^^^^^^^^^^
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/torch/_dynamo/symbolic_convert.py", line 962, in step
-    self.dispatch_table[inst.opcode](self, inst)
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/torch/_dynamo/symbolic_convert.py", line 3048, in RETURN_VALUE
-    self._return(inst)
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/torch/_dynamo/symbolic_convert.py", line 3033, in _return
-    self.output.compile_subgraph(
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/torch/_dynamo/output_graph.py", line 1101, in compile_subgraph
-    self.compile_and_call_fx_graph(
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/torch/_dynamo/output_graph.py", line 1382, in compile_and_call_fx_graph
-    compiled_fn = self.call_user_compiler(gm)
-                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/torch/_dynamo/output_graph.py", line 1432, in call_user_compiler
-    return self._call_user_compiler(gm)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/torch/_dynamo/output_graph.py", line 1483, in _call_user_compiler
-    raise BackendCompilerFailed(self.compiler_fn, e).with_traceback(
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/torch/_dynamo/output_graph.py", line 1462, in _call_user_compiler
-    compiled_fn = compiler_fn(gm, self.example_inputs())
-                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/torch/_dynamo/repro/after_dynamo.py", line 130, in __call__
-    compiled_gm = compiler_fn(gm, example_inputs)
-                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/torch/__init__.py", line 2340, in __call__
-    return compile_fx(model_, inputs_, config_patches=self.config)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/torch/_inductor/compile_fx.py", line 1863, in compile_fx
-    return aot_autograd(
-           ^^^^^^^^^^^^^
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/torch/_dynamo/backends/common.py", line 83, in __call__
-    cg = aot_module_simplified(gm, example_inputs, **self.kwargs)
-         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/torch/_functorch/aot_autograd.py", line 1155, in aot_module_simplified
-    compiled_fn = dispatch_and_compile()
-                  ^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/torch/_functorch/aot_autograd.py", line 1131, in dispatch_and_compile
-    compiled_fn, _ = create_aot_dispatcher_function(
-                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/torch/_functorch/aot_autograd.py", line 580, in create_aot_dispatcher_function
-    return _create_aot_dispatcher_function(
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/torch/_functorch/aot_autograd.py", line 830, in _create_aot_dispatcher_function
-    compiled_fn, fw_metadata = compiler_fn(
-                               ^^^^^^^^^^^^
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/torch/_functorch/_aot_autograd/jit_compile_runtime_wrappers.py", line 203, in aot_dispatch_base
-    compiled_fw = compiler(fw_module, updated_flat_args)
-                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/torch/_functorch/aot_autograd.py", line 489, in __call__
-    return self.compiler_fn(gm, example_inputs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/torch/_inductor/compile_fx.py", line 1741, in fw_compiler_base
-    return inner_compile(
-           ^^^^^^^^^^^^^^
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/torch/_inductor/compile_fx.py", line 569, in compile_fx_inner
-    return wrap_compiler_debug(_compile_fx_inner, compiler_name="inductor")(
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/torch/_dynamo/repro/after_aot.py", line 102, in debug_wrapper
-    inner_compiled_fn = compiler_fn(gm, example_inputs)
-                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/torch/_inductor/compile_fx.py", line 685, in _compile_fx_inner
-    mb_compiled_graph = fx_codegen_and_compile(
-                        ^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/torch/_inductor/compile_fx.py", line 1129, in fx_codegen_and_compile
-    return scheme.codegen_and_compile(gm, example_inputs, inputs_to_check, graph_kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/torch/_inductor/compile_fx.py", line 1044, in codegen_and_compile
-    compiled_fn = graph.compile_to_module().call
-                  ^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/torch/_inductor/graph.py", line 2027, in compile_to_module
-    return self._compile_to_module()
-           ^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/torch/_inductor/graph.py", line 2033, in _compile_to_module
-    self.codegen_with_cpp_wrapper() if self.cpp_wrapper else self.codegen()
-                                                             ^^^^^^^^^^^^^^
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/torch/_inductor/graph.py", line 1968, in codegen
-    self.scheduler.codegen()
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/torch/_inductor/scheduler.py", line 3477, in codegen
-    return self._codegen()
-           ^^^^^^^^^^^^^^^
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/torch/_inductor/scheduler.py", line 3554, in _codegen
-    self.get_backend(device).codegen_node(node)
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/torch/_inductor/codegen/cuda_combined_scheduling.py", line 80, in codegen_node
-    return self._triton_scheduling.codegen_node(node)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/torch/_inductor/codegen/simd.py", line 1219, in codegen_node
-    return self.codegen_node_schedule(
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/torch/_inductor/codegen/simd.py", line 1263, in codegen_node_schedule
-    src_code = kernel.codegen_kernel()
-               ^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/torch/_inductor/codegen/triton.py", line 3154, in codegen_kernel
-    **self.inductor_meta_common(),
-      ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/torch/_inductor/codegen/triton.py", line 3013, in inductor_meta_common
-    "backend_hash": torch.utils._triton.triton_hash_with_backend(),
-                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/torch/utils/_triton.py", line 111, in triton_hash_with_backend
-    backend = triton_backend()
-              ^^^^^^^^^^^^^^^^
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/torch/utils/_triton.py", line 103, in triton_backend
-    target = driver.active.get_current_target()
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/triton/runtime/driver.py", line 23, in __getattr__
-    self._initialize_obj()
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/triton/runtime/driver.py", line 20, in _initialize_obj
-    self._obj = self._init_fn()
-                ^^^^^^^^^^^^^^^
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/triton/runtime/driver.py", line 9, in _create_driver
-    return actives[0]()
-           ^^^^^^^^^^^^
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/triton/backends/nvidia/driver.py", line 450, in __init__
-    self.utils = CudaUtils()  # TODO: make static
-                 ^^^^^^^^^^^
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/triton/backends/nvidia/driver.py", line 80, in __init__
-    mod = compile_module_from_src(Path(os.path.join(dirname, "driver.c")).read_text(), "cuda_utils")
-          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/triton/backends/nvidia/driver.py", line 57, in compile_module_from_src
-    so = _build(name, src_path, tmpdir, library_dirs(), include_dir, libraries)
-         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/triton/runtime/build.py", line 50, in _build
-    ret = subprocess.check_call(cc_cmd)
-          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/usr/lib/python3.12/subprocess.py", line 413, in check_call
-    raise CalledProcessError(retcode, cmd)
-torch._dynamo.exc.BackendCompilerFailed: backend='inductor' raised:
-CalledProcessError: Command '['/usr/bin/gcc', '/tmp/tmpao0z0syw/main.c', '-O3', '-shared', '-fPIC', '-Wno-psabi', '-o', '/tmp/tmpao0z0syw/cuda_utils.cpython-312-x86_64-linux-gnu.so', '-lcuda', '-L/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/triton/backends/nvidia/lib', '-L/lib/x86_64-linux-gnu', '-I/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/triton/backends/nvidia/include', '-I/tmp/tmpao0z0syw', '-I/usr/include/python3.12']' returned non-zero exit status 1.
+    1 ops (compiled): 0.181 ms | AI: 0.25 FLOP/B | 0.74 TFLOP/s
+    2 ops (   eager): 0.968 ms | AI: 0.0833 FLOP/B | 0.28 TFLOP/s
+    2 ops (compiled): 0.181 ms | AI: 0.5 FLOP/B | 1.48 TFLOP/s
+    4 ops (   eager): 2.018 ms | AI: 0.0833 FLOP/B | 0.27 TFLOP/s
+    4 ops (compiled): 0.181 ms | AI: 1 FLOP/B | 2.96 TFLOP/s
+    8 ops (   eager): 4.116 ms | AI: 0.0833 FLOP/B | 0.26 TFLOP/s
+    8 ops (compiled): 0.181 ms | AI: 2 FLOP/B | 5.92 TFLOP/s
+   16 ops (   eager): 8.313 ms | AI: 0.0833 FLOP/B | 0.26 TFLOP/s
+   16 ops (compiled): 0.181 ms | AI: 4 FLOP/B | 11.85 TFLOP/s
+   32 ops (   eager): 16.707 ms | AI: 0.0833 FLOP/B | 0.26 TFLOP/s
+   32 ops (compiled): 0.181 ms | AI: 8 FLOP/B | 23.68 TFLOP/s
+   64 ops (   eager): 33.496 ms | AI: 0.0833 FLOP/B | 0.26 TFLOP/s
+   64 ops (compiled): 0.182 ms | AI: 16 FLOP/B | 47.32 TFLOP/s
+  128 ops (   eager): 67.075 ms | AI: 0.0833 FLOP/B | 0.26 TFLOP/s
+  128 ops (compiled): 0.285 ms | AI: 32 FLOP/B | 60.26 TFLOP/s
+  matmul 1024×1024: 0.059 ms | AI: 170.7 FLOP/B | 36.59 TFLOP/s
+  matmul 2048×2048: 0.345 ms | AI: 341.3 FLOP/B | 49.82 TFLOP/s
+  matmul 4096×4096: 2.648 ms | AI: 682.7 FLOP/B | 51.91 TFLOP/s
 
-Set TORCH_LOGS="+dynamo" and TORCHDYNAMO_VERBOSE=1 for more information
+Generating plots...
 
+Roofline plot saved to /home/karke/gpu_and_inference_hw/hw1/results/roofline.png
 
-You can suppress this exception and fall back to eager by setting:
-    import torch._dynamo
-    torch._dynamo.config.suppress_errors = True
-
+Done! Check the results/ directory for plots.

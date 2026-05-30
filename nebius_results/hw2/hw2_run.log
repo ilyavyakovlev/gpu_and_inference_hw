@@ -7,54 +7,69 @@ Model: Tiny random Llama (2 layers, d_model=2048)
 -------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  
                                                    Name    Self CPU %      Self CPU   CPU total %     CPU total  CPU time avg     Self CUDA   Self CUDA %    CUDA total  CUDA time avg    # of Calls  
 -------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  
-                                           aten::matmul         0.32%       1.004ms        32.13%      99.257ms     516.965us       0.000us         0.00%      70.263ms     365.951us           192  
-                                           aten::linear         0.14%     444.981us        12.07%      37.279ms     207.105us       0.000us         0.00%      70.208ms     390.045us           180  
-                                               aten::mm         2.82%       8.703ms        11.03%      34.080ms     189.334us      68.612ms        85.47%      70.208ms     390.045us           180  
-sm80_xmma_gemm_f32f32_f32f32_f32_tn_n_tilesize128x12...         0.00%       0.000us         0.00%       0.000us       0.000us      67.442ms        84.01%      67.442ms     378.885us           178  
-                     aten::scaled_dot_product_attention         0.09%     281.441us         0.86%       2.662ms     110.917us       0.000us         0.00%       6.419ms     267.465us            24  
-          aten::_scaled_dot_product_efficient_attention         0.12%     371.077us         0.77%       2.381ms      99.190us       0.000us         0.00%       6.419ms     267.465us            24  
-                     aten::_efficient_attention_forward         0.12%     381.933us         0.58%       1.789ms      74.538us       5.744ms         7.16%       6.419ms     267.465us            24  
-fmha_cutlassF_f32_aligned_32x128_gmem_sm80(PyTorchMe...         0.00%       0.000us         0.00%       0.000us       0.000us       5.744ms         7.16%       5.744ms     239.345us            24  
-                                           Unrecognized        51.77%     159.929ms        51.77%     159.929ms       2.499ms       2.536ms         3.16%       2.536ms      39.627us            64  
-                                              aten::mul         0.80%       2.478ms         3.42%      10.565ms      40.018us       2.178ms         2.71%       2.212ms       8.378us           264  
-void at::native::elementwise_kernel<128, 2, at::nati...         0.00%       0.000us         0.00%       0.000us       0.000us       1.612ms         2.01%       1.612ms       7.462us           216  
-                                              aten::cat         0.49%       1.517ms         1.71%       5.285ms      44.041us       1.276ms         1.59%       1.299ms      10.828us           120  
-                                   cudaFuncSetAttribute         2.90%       8.972ms         3.28%      10.144ms     362.278us       0.000us         0.00%       1.243ms      44.403us            28  
-void at::native::(anonymous namespace)::CatArrayBatc...         0.00%       0.000us         0.00%       0.000us       0.000us       1.217ms         1.52%       1.217ms      12.679us            96  
-                                  cudaFuncGetAttributes         0.23%     701.245us         6.86%      21.185ms      76.758us       0.000us         0.00%       1.036ms       3.755us           276  
-sm80_xmma_gemm_f32f32_f32f32_f32_tn_n_tilesize64x256...         0.00%       0.000us         0.00%       0.000us       0.000us     946.580us         1.18%     946.580us     473.290us             2  
-                                              aten::add         0.46%       1.434ms         3.44%      10.628ms      68.130us     824.624us         1.03%     844.429us       5.413us           156  
-void at::native::vectorized_elementwise_kernel<4, at...         0.00%       0.000us         0.00%       0.000us       0.000us     530.102us         0.66%     530.102us      22.088us            24  
-void at::native::elementwise_kernel<128, 2, at::nati...         0.00%       0.000us         0.00%       0.000us       0.000us     413.144us         0.51%     413.144us       8.607us            48  
-                                             aten::silu         0.11%     334.942us         1.49%       4.612ms     192.162us     346.270us         0.43%     388.990us      16.208us            24  
+                                           aten::matmul         0.31%     901.508us        31.13%      91.289ms     475.463us       0.000us         0.00%      70.431ms     366.829us           192  
+                                           aten::linear         0.13%     391.220us        11.64%      34.142ms     189.680us       0.000us         0.00%      70.376ms     390.980us           180  
+                                               aten::mm         2.67%       7.817ms        10.67%      31.300ms     173.887us      68.777ms        85.49%      70.376ms     390.980us           180  
+sm80_xmma_gemm_f32f32_f32f32_f32_tn_n_tilesize128x12...         0.00%       0.000us         0.00%       0.000us       0.000us      67.597ms        84.02%      67.597ms     379.757us           178  
+                     aten::scaled_dot_product_attention         0.09%     261.437us         0.83%       2.436ms     101.514us       0.000us         0.00%       6.433ms     268.053us            24  
+          aten::_scaled_dot_product_efficient_attention         0.11%     335.097us         0.74%       2.175ms      90.621us       0.000us         0.00%       6.433ms     268.053us            24  
+                     aten::_efficient_attention_forward         0.12%     341.113us         0.56%       1.652ms      68.817us       5.751ms         7.15%       6.433ms     268.053us            24  
+fmha_cutlassF_f32_aligned_32x128_gmem_sm80(PyTorchMe...         0.00%       0.000us         0.00%       0.000us       0.000us       5.751ms         7.15%       5.751ms     239.606us            24  
+                                           Unrecognized        50.51%     148.120ms        50.51%     148.120ms       2.314ms       2.549ms         3.17%       2.549ms      39.824us            64  
+                                              aten::mul         0.76%       2.218ms         3.33%       9.777ms      37.032us       2.181ms         2.71%       2.214ms       8.388us           264  
+void at::native::elementwise_kernel<128, 2, at::nati...         0.00%       0.000us         0.00%       0.000us       0.000us       1.614ms         2.01%       1.614ms       7.472us           216  
+                                              aten::cat         0.46%       1.341ms         1.64%       4.798ms      39.980us       1.277ms         1.59%       1.300ms      10.833us           120  
+                                   cudaFuncSetAttribute         2.75%       8.074ms         3.12%       9.161ms     327.161us       0.000us         0.00%       1.253ms      44.765us            28  
+void at::native::(anonymous namespace)::CatArrayBatc...         0.00%       0.000us         0.00%       0.000us       0.000us       1.217ms         1.51%       1.217ms      12.675us            96  
+                                  cudaFuncGetAttributes         0.22%     635.382us         6.64%      19.477ms      70.567us       0.000us         0.00%       1.038ms       3.760us           276  
+sm80_xmma_gemm_f32f32_f32f32_f32_tn_n_tilesize64x256...         0.00%       0.000us         0.00%       0.000us       0.000us     953.917us         1.19%     953.917us     476.959us             2  
+                                              aten::add         0.45%       1.328ms         3.31%       9.716ms      62.280us     818.106us         1.02%     837.113us       5.366us           156  
+void at::native::vectorized_elementwise_kernel<4, at...         0.00%       0.000us         0.00%       0.000us       0.000us     530.706us         0.66%     530.706us      22.113us            24  
+void at::native::elementwise_kernel<128, 2, at::nati...         0.00%       0.000us         0.00%       0.000us       0.000us     411.504us         0.51%     411.504us       8.573us            48  
+                                             aten::silu         0.10%     282.104us         1.47%       4.303ms     179.287us     347.602us         0.43%     393.391us      16.391us            24  
 -------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  
-Self CPU time total: 308.905ms
-Self CUDA time total: 80.280ms
+Self CPU time total: 293.273ms
+Self CUDA time total: 80.453ms
 
 Chrome trace saved to /home/karke/gpu_and_inference_hw/hw2/results/v0_slow_trace.json
-Slow: 128 tokens in 0.95s (135.0 tok/s)
+Slow: 128 tokens in 0.95s (135.4 tok/s)
 Token preview: [775, 1973, 97, 2453, 295, 695, 775, 866]
 
 --- Part 2: Optimized ---
-Traceback (most recent call last):
-  File "/home/karke/gpu_and_inference_hw/hw2/hw2_task.py", line 98, in <module>
-    main()
-  File "/home/karke/gpu_and_inference_hw/hw2/hw2_task.py", line 82, in main
-    optimized_elapsed = generate_optimized(optimized_trace_name="v1_optimized_trace.json")
-                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/karke/gpu_and_inference_hw/hw2/hw2_task.py", line 62, in generate_optimized
-    profile(optimized_loop, model, input_ids, optimized_trace_name)
-  File "/home/karke/gpu_and_inference_hw/hw2/hw2_task.py", line 40, in profile
-    with torch.profiler.profile(
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/torch/profiler/profiler.py", line 793, in __exit__
-    self.stop()
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/torch/profiler/profiler.py", line 809, in stop
-    self._transit_action(self.current_action, None)
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/torch/profiler/profiler.py", line 852, in _transit_action
-    action()
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/torch/profiler/profiler.py", line 239, in stop_trace
-    self.profiler.__exit__(None, None, None)
-  File "/home/karke/gpu_and_inference_hw/.venv/lib/python3.12/site-packages/torch/autograd/profiler.py", line 378, in __exit__
-    self.kineto_results = _disable_profiler()
-                          ^^^^^^^^^^^^^^^^^^^
-RuntimeError: !stack.empty() INTERNAL ASSERT FAILED at "/pytorch/torch/csrc/autograd/profiler_python.cpp":983, please report a bug to PyTorch. Python replay stack is empty.
+-------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  
+                                                   Name    Self CPU %      Self CPU   CPU total %     CPU total  CPU time avg     Self CUDA   Self CUDA %    CUDA total  CUDA time avg    # of Calls  
+-------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  
+                                           aten::matmul         0.63%     867.628us        84.03%     115.476ms     601.439us       0.000us         0.00%       2.429ms      12.650us           192  
+                                           aten::linear         0.24%     327.084us        84.13%     115.610ms     642.277us       0.000us         0.00%       2.390ms      13.277us           180  
+                                               aten::mm        40.10%      55.101ms        82.69%     113.639ms     631.329us       2.179ms        44.11%       2.390ms      13.277us           180  
+void cutlass::Kernel2<cutlass_80_tensorop_bf16_s1681...         0.00%       0.000us         0.00%       0.000us       0.000us     758.312us        15.35%     758.312us      17.234us            44  
+                                              aten::cat         0.58%     802.364us         1.03%       1.411ms      13.064us     613.130us        12.41%     634.346us       5.874us           108  
+                                              aten::mul         1.11%       1.526ms         2.32%       3.187ms      12.073us     559.147us        11.32%     576.170us       2.182us           264  
+                     aten::scaled_dot_product_attention         0.18%     244.906us         4.12%       5.658ms     235.754us       0.000us         0.00%     568.300us      23.679us            24  
+              aten::_scaled_dot_product_flash_attention         0.12%     164.318us         3.94%       5.413ms     225.549us       0.000us         0.00%     568.300us      23.679us            24  
+                         aten::_flash_attention_forward         0.35%     485.204us         3.70%       5.089ms     212.051us     379.312us         7.68%     568.300us      23.679us            24  
+std::enable_if<!(false), void>::type internal::gemvx...         0.00%       0.000us         0.00%       0.000us       0.000us     553.778us        11.21%     553.778us       6.293us            88  
+                                           Unrecognized        45.28%      62.231ms        45.28%      62.231ms       1.830ms     489.430us         9.91%     489.430us      14.395us            34  
+sm90_xmma_gemm_bf16bf16_bf16f32_f32_tn_n_tilesize128...         0.00%       0.000us         0.00%       0.000us       0.000us     409.778us         8.30%     409.778us      29.270us            14  
+void at::native::(anonymous namespace)::CatArrayBatc...         0.00%       0.000us         0.00%       0.000us       0.000us     406.290us         8.23%     406.290us       9.234us            44  
+                                               aten::to         0.13%     173.145us         2.04%       2.800ms      10.447us       0.000us         0.00%     316.338us       1.180us           268  
+                                         aten::_to_copy         0.34%     468.235us         1.91%       2.627ms      15.271us       0.000us         0.00%     316.338us       1.839us           172  
+                                            aten::copy_         0.48%     654.952us         1.07%       1.466ms       8.525us     314.834us         6.37%     316.338us       1.839us           172  
+std::enable_if<!(false), void>::type internal::gemvx...         0.00%       0.000us         0.00%       0.000us       0.000us     314.838us         6.37%     314.838us      14.311us            22  
+void at::native::elementwise_kernel<128, 4, at::nati...         0.00%       0.000us         0.00%       0.000us       0.000us     287.190us         5.81%     287.190us       2.843us           101  
+                                              aten::add         0.62%     846.734us         1.12%       1.543ms       9.894us     220.890us         4.47%     233.113us       1.494us           156  
+void at::native::unrolled_elementwise_kernel<at::nat...         0.00%       0.000us         0.00%       0.000us       0.000us     209.945us         4.25%     209.945us       2.499us            84  
+-------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  
+Self CPU time total: 137.421ms
+Self CUDA time total: 4.939ms
+
+Chrome trace saved to /home/karke/gpu_and_inference_hw/hw2/results/v1_optimized_trace.json
+Optimized: 128 tokens in 0.19s (674.8 tok/s)
+Token preview: [775, 1973, 97, 2453, 295, 695, 775, 866]
+
+============================================================
+SUMMARY
+============================================================
+  Slow:        0.95s
+  Optimized:   0.19s
+  Speedup:     4.99x  (vs V0 slow baseline)

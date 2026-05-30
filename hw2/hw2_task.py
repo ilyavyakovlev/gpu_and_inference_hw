@@ -43,7 +43,6 @@ def profile(loop_fn, model, input_ids, trace_name: str):
             torch.profiler.ProfilerActivity.CUDA,
         ],
         record_shapes=True,
-        with_stack=True,
     ) as prof:
         loop_fn(model, input_ids, PROFILE_STEPS)
 

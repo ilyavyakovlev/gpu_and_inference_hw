@@ -24,9 +24,26 @@ set +o allexport
 
 : "${NEBIUS_INSTANCE_IP:?Set NEBIUS_INSTANCE_IP in .env}"
 : "${NEBIUS_SSH_USER:=karke}"
-: "${NEBIUS_SSH_KEY_PATH:=$HOME/.ssh/id_rsa}"
+: "${NEBIUS_SSH_KEY_PATH:=$HOME/.ssh/id_ed25519}"
 : "${NEBIUS_REMOTE_DIR:=/home/karke/gpu_and_inference_hw}"
 : "${NEBIUS_SSH_PORT:=22}"
+
+# ── SSH agent — load key once so passphrase is never asked during the run ──
+_load_key_into_agent() {
+    # Start a new agent if there isn't one, then add the key.
+    # If the key is already in the agent this is a no-op.
+    if [[ -z "${SSH_AUTH_SOCK:-}" ]]; then
+        eval "$(ssh-agent -s)" >/dev/null
+    fi
+    # ssh-add exits 0 if the key is already loaded, otherwise prompts once.
+    ssh-add -l 2>/dev/null | grep -qF "$(ssh-keygen -lf "${NEBIUS_SSH_KEY_PATH}" 2>/dev/null | awk '{print $2}')" \
+        || ssh-add "${NEBIUS_SSH_KEY_PATH}"
+}
+# Only ask for passphrase when this script is run directly (not when called
+# from nebius_create_and_run.sh, which already set up the agent).
+if [[ "${NEBIUS_AGENT_READY:-0}" != "1" ]]; then
+    _load_key_into_agent
+fi
 
 SSH_OPTS="-i ${NEBIUS_SSH_KEY_PATH} -p ${NEBIUS_SSH_PORT} -o StrictHostKeyChecking=no -o ConnectTimeout=15"
 REMOTE="${NEBIUS_SSH_USER}@${NEBIUS_INSTANCE_IP}"

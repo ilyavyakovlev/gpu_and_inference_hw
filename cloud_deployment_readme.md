@@ -75,37 +75,49 @@ You should see an `nvidia-smi` table with the L40S listed. If the connection han
 
 ---
 
-## Step 4 — Run the Deployment Script
+## Step 4 — Run everything in one command
 
 From the **repo root**, run:
 
 ```bash
-./deploy/run_on_nebius.sh
+./deploy/nebius_create_and_run.sh
 ```
 
-This single script does five things in order:
+This script does everything end-to-end with clear timestamped logging:
 
-1. **Copies the repo** to the instance via `rsync` (skips `.git/`, `.venv/`, and result directories).
-2. **Sets up the Python environment** — creates a virtualenv, installs PyTorch with CUDA support, and installs the remaining pinned requirements.
-3. **Runs HW1** (`python3 hw1/hw1_task.py`) and streams the output to your terminal. Saves a log at `hw1/results/hw1_run.log` on the instance.
-4. **Runs HW2** (`python3 hw2/hw2_task.py`) and streams the output. Saves a log at `hw2/results/hw2_run.log`.
-5. **Downloads results** into `nebius_results/` in the repo root.
+1. **Starts ssh-agent** and prompts for your key passphrase **once** — no further prompts.
+2. **Verifies Nebius auth** (`nebius iam whoami`).
+3. **Creates a boot disk** (Ubuntu 24.04 + CUDA 13.0).
+4. **Creates the GPU instance** with your SSH key embedded via cloud-init.
+5. **Polls until RUNNING**, then retrieves the public IP and writes it to `.env`.
+6. **Polls until SSH is available** (~60–90 s after RUNNING).
+7. **Rsyncs the repo**, installs dependencies, runs HW1 + HW2, downloads results.
+8. **Destroys the instance and disk** when done (saves cost automatically).
 
 ### Optional flags
 
-| Flag            | Effect                                  |
-|----------------|----------------------------------------|
-| `--hw1-only`   | Skip HW2; only run the roofline benchmark |
-| `--hw2-only`   | Skip HW1; only run the inference optimization |
-| `--setup-only` | Install dependencies only; do not run either homework |
-
-Examples:
+| Flag           | Effect                                               |
+|---------------|-----------------------------------------------------|
+| `--hw1-only`  | Run only HW1 (skip HW2)                             |
+| `--hw2-only`  | Run only HW2 (skip HW1)                             |
+| `--no-destroy`| Leave the VM running after the run (for debugging)  |
 
 ```bash
-./deploy/run_on_nebius.sh --hw1-only
-./deploy/run_on_nebius.sh --hw2-only
-./deploy/run_on_nebius.sh --setup-only   # useful to pre-warm the env before a timed run
+./deploy/nebius_create_and_run.sh --hw1-only
+./deploy/nebius_create_and_run.sh --no-destroy   # inspect the instance afterward
 ```
+
+### Manual flow (if you already have a running VM)
+
+If you created a VM yourself and just want to rsync + run + download:
+
+```bash
+# Set the IP in .env, then:
+./deploy/run_on_nebius.sh
+# Flags: --hw1-only | --hw2-only | --setup-only
+```
+
+`run_on_nebius.sh` also manages the ssh-agent automatically — one passphrase prompt at the start.
 
 ### First-run note on torch.compile
 

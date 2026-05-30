@@ -9,6 +9,11 @@ cd "$REMOTE_DIR"
 echo "==> Checking CUDA availability"
 nvidia-smi --query-gpu=name,memory.total --format=csv,noheader
 
+echo "==> Installing system build dependencies"
+sudo apt-get update -qq
+# python3-dev provides Python.h, required by Triton when torch.compile builds CUDA kernels
+sudo apt-get install -y -qq python3-dev
+
 echo "==> Checking Python"
 python3 --version
 
