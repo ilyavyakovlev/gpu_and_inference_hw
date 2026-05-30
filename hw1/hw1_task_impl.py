@@ -12,8 +12,7 @@ import torch
 
 def lowest_ai_fn(x: torch.Tensor) -> torch.Tensor:
     """Lowest arithmetic intensity baseline (0 FLOP/Byte)."""
-    # TODO (1 line): implement a lowest-AI op
-    pass
+    return x.clone()
 
 
 # TASK 1b: Implement a function with configurable arithmetic intensity.
@@ -37,10 +36,12 @@ def make_compute_fn(num_ops: int, compiled: bool = True):
     """Return an eager or compiled function whose work scales with num_ops."""
 
     def fn(x: torch.Tensor) -> torch.Tensor:
-        pass
+        acc = x
+        for _ in range(num_ops):
+            acc = acc * x + x
+        return acc
 
-    # TODO (1 line): return either `fn` or `torch.compile(fn)` based on `compiled`
-    pass
+    return torch.compile(fn) if compiled else fn
 
 
 # ============================================================================
@@ -62,8 +63,17 @@ def benchmark_fn(fn, *args, warmup=25, rep=100) -> float:
         fn(*args)
     torch.cuda.synchronize()
 
-    # TODO: time `rep` runs using CUDA events and return median latency (ms)
-    pass
+    start_events = [torch.cuda.Event(enable_timing=True) for _ in range(rep)]
+    end_events = [torch.cuda.Event(enable_timing=True) for _ in range(rep)]
+
+    for i in range(rep):
+        start_events[i].record()
+        fn(*args)
+        end_events[i].record()
+
+    torch.cuda.synchronize()
+    times = sorted(s.elapsed_time(e) for s, e in zip(start_events, end_events))
+    return times[len(times) // 2]
 
 
 # TASK 3: Compute element-wise operation metrics from measured runtime.
@@ -83,8 +93,19 @@ def benchmark_fn(fn, *args, warmup=25, rep=100) -> float:
 
 
 def compute_elementwise_metrics(num_elements, num_ops, bytes_per_element, ms, variant):
-    # TODO: compute total FLOPs, arithmetic intensity, and achieved FLOP/s
-    pass
+    # Each iteration: acc * x (1 mul) + x (1 add) = 2 FLOPs per element
+    total_flops = num_elements * 2 * num_ops
+
+    if variant == "compiled":
+        # Fused kernel: one global memory read + one write per element
+        total_bytes = num_elements * 2 * bytes_per_element
+    else:
+        # Eager: each iteration launches separate mul and add kernels.
+        # Each kernel reads 2 tensors and writes 1 → 3 accesses per op × 2 ops = 6 per iteration.
+        total_bytes = num_elements * num_ops * 6 * bytes_per_element
+
+    ai = total_flops / total_bytes
+    achieved_flops = total_flops / (ms * 1e-3)
     return total_flops, ai, achieved_flops
 
 
@@ -97,12 +118,42 @@ def compute_elementwise_metrics(num_elements, num_ops, bytes_per_element, ms, va
 # Why does performance rise as arithmetic intensity increases even though the
 # measured runtime changes only a little?
 #
+# A1. All these compiled points are memory-bound: the kernel reads and writes
+# the same 512 MB of data regardless of num_ops, so runtime stays roughly
+# constant. But each element gets 2*K FLOPs of compute "for free" while the
+# data is in registers. FLOP/s = total_flops / time, and total_flops grows
+# linearly with K while time barely changes, so the achieved FLOP/s rises
+# proportionally. Performance on the roofline plot climbs along the memory
+# bandwidth ceiling as AI increases.
+#
 # Q2. In one sample run, `matmul 1024x1024` achieved lower FLOP/s than the
 # `128 ops` compiled element-wise operation. Give one or two reasons why that can
 # happen on a large GPU like an H100.
+#
+# A2. First, the 1024×1024 matrix is small relative to the number of GPU SMs:
+# the tile structure may not expose enough parallelism to saturate all cores,
+# leaving many SMs idle. Second, launching cuBLAS involves non-trivial driver
+# overhead (workspace allocation, algorithm selection); for small matrices this
+# startup cost is significant relative to the actual compute time, reducing
+# measured FLOP/s below what a simple fused elementwise kernel can sustain.
 #
 # Q3. Between `64 ops` and `128 ops`, runtime increases more noticeably than it
 # did for smaller operations. What does that suggest about what resource is
 # becoming the bottleneck?
 #
+# A3. For the H100 the ridge point is ~20 FLOP/Byte. At 64 ops the compiled AI
+# is 64/4 = 16 FLOP/Byte (just under the ridge), so the kernel is still
+# memory-bound and runtime is flat. At 128 ops the AI is 128/4 = 32 FLOP/Byte,
+# which crosses the ridge and puts the kernel in the compute-bound regime.
+# Runtime now grows with the extra FLOPs instead of staying flat, indicating
+# that peak FP32 throughput—not memory bandwidth—has become the bottleneck.
+#
 # Q4. Why do the eager `ops-K` points look so different from the compiled ones?
+#
+# A4. In eager mode PyTorch launches a separate GPU kernel for every operation.
+# Each intermediate result (e.g. the product acc*x) is written to global memory
+# and then read back for the next op, so every iteration generates ~6 tensor
+# accesses per element instead of 2. The arithmetic intensity is therefore
+# 2/(6*4) ≈ 0.083 FLOP/Byte regardless of K, meaning the eager points cluster
+# near the far-left of the roofline and do not move rightward as K grows—they
+# are always severely memory-bound due to the materialised intermediates.
