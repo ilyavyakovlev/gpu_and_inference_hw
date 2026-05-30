@@ -23,9 +23,9 @@ source .env
 set +o allexport
 
 : "${NEBIUS_INSTANCE_IP:?Set NEBIUS_INSTANCE_IP in .env}"
-: "${NEBIUS_SSH_USER:=ubuntu}"
+: "${NEBIUS_SSH_USER:=karke}"
 : "${NEBIUS_SSH_KEY_PATH:=$HOME/.ssh/id_rsa}"
-: "${NEBIUS_REMOTE_DIR:=/home/ubuntu/gpu_and_inference_hw}"
+: "${NEBIUS_REMOTE_DIR:=/home/karke/gpu_and_inference_hw}"
 : "${NEBIUS_SSH_PORT:=22}"
 
 SSH_OPTS="-i ${NEBIUS_SSH_KEY_PATH} -p ${NEBIUS_SSH_PORT} -o StrictHostKeyChecking=no -o ConnectTimeout=15"

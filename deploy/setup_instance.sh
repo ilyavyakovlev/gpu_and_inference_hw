@@ -24,8 +24,7 @@ echo "==> Installing PyTorch with CUDA support"
 # Install torch separately with the CUDA wheel index to ensure GPU support.
 # The version must match requirements.txt. Adjust cu124 if your instance has a
 # different CUDA toolkit version (check with: nvcc --version or nvidia-smi).
-TORCH_VER=$(grep "^torch==" requirements.txt | cut -d= -f3)
-pip install --quiet "torch==${TORCH_VER}" \
+pip install --quiet "torch==2.6.0+cu124" \
     --index-url https://download.pytorch.org/whl/cu124
 
 echo "==> Installing remaining requirements"
